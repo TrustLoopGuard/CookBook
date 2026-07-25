@@ -9,22 +9,25 @@ frameworks without rewriting their business logic.
 | --- | --- | --- | --- |
 | AG2 | Tool calls, final plain-text output | Async middleware | [Guard an AG2 sales agent](examples/ag2/README.md) |
 | Agno | Tool calls, final plain-text output | Sync hooks | [Guard an Agno sales agent](examples/agno/README.md) |
+| OpenAI Agents SDK | Local function tools, final output | Agent decorator + output guard | [Guard an OpenAI sales agent](examples/openai-agents/README.md) |
+| Mastra | Resolved local tools, final output | Agent decorator + output guard | [Guard a Mastra sales agent](examples/mastra/README.md) |
+| LiveKit Agents | Local function tools, pre-TTS text | Voice agent decorator | [Guard a LiveKit voice agent](examples/livekit/README.md) |
 
-Both examples use the same flow:
+Every example uses the same flow:
 
 1. Build the framework agent and its tools normally.
-2. Create a TrustLoopGuard client.
-3. Attach one framework adapter.
-4. Keep calling the framework's normal `ask` or `run` API.
+2. Attach one TrustLoopGuard adapter.
+3. Keep calling the framework's normal agent API.
 
-For both frameworks, a tool only runs when the guard decision permits it.
-Denied, deferred, or approval-pending calls are returned to the agent as normal
-tool results so the framework loop can continue safely. The model-input path
-remains framework-owned for both adapters.
+A local tool only runs when the guard decision permits it. The model-input path
+remains framework-owned. Provider-hosted tools and remote execution hidden from
+the application process require their own enforcement boundary.
 
 ## Prerequisites
 
 - Python 3.10 or newer
+- Node.js 24 or newer for the TypeScript examples
+- pnpm 10 or newer for the TypeScript examples
 - A running TrustLoopGuard API and API key
 - An OpenAI API key for the demo agents
 
@@ -43,3 +46,17 @@ python -m pip install "ag2[openai]>=1.0.0b0,<1.1" "agno[openai]>=2.8.3,<3"
 ```
 
 Then choose an example and follow its README.
+
+The TypeScript examples currently link to a sibling TrustLoopGuard source
+checkout so the CookBook and unreleased adapter changes can be tested together:
+
+```bash
+pnpm --dir ../TrustLoopGuard install --frozen-lockfile
+pnpm --dir ../TrustLoopGuard --filter @trustloopguard/sdk build
+pnpm install --frozen-lockfile
+pnpm test
+pnpm typecheck
+```
+
+After the next TypeScript SDK release, replace the local `file:` dependency in
+`package.json` with the published `@trustloopguard/sdk` version.
