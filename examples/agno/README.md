@@ -14,10 +14,14 @@ source .venv/bin/activate
 python -m pip install -r examples/agno/requirements.txt
 ```
 
-For local SDK development, replace the TrustLoopGuard package with the sibling
+The Agno adapter is currently under review in
+[TrustLoopGuard PR #431](https://github.com/ducnguyen67201/TrustLoopGuard/pull/431).
+Until a package containing it is published, install the SDK from a sibling
 checkout:
 
 ```bash
+git clone https://github.com/ducnguyen67201/TrustLoopGuard.git ../TrustLoopGuard
+git -C ../TrustLoopGuard switch codex/python-agent-framework-integrations
 python -m pip install -e "../TrustLoopGuard/sdks/python[agno]"
 ```
 

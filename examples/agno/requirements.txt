@@ -1,2 +1,3 @@
-trustloopguard[agno]
+# Install TrustLoopGuard from PR #431 as documented in this example's README
+# until a release containing the Agno adapter is available.
 agno[openai]>=2.8.3,<3

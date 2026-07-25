@@ -13,10 +13,14 @@ source .venv/bin/activate
 python -m pip install -r examples/ag2/requirements.txt
 ```
 
-For local SDK development, replace the TrustLoopGuard package with the sibling
+The AG2 adapter is currently under review in
+[TrustLoopGuard PR #431](https://github.com/ducnguyen67201/TrustLoopGuard/pull/431).
+Until a package containing it is published, install the SDK from a sibling
 checkout:
 
 ```bash
+git clone https://github.com/ducnguyen67201/TrustLoopGuard.git ../TrustLoopGuard
+git -C ../TrustLoopGuard switch codex/python-agent-framework-integrations
 python -m pip install -e "../TrustLoopGuard/sdks/python[ag2]"
 ```
 
@@ -46,9 +50,11 @@ guard_ag2(
 
 TrustLoopGuard middleware checks:
 
-- each user/model input before AG2 sends it to the model;
 - every tool proposal before AG2 executes the tool;
-- the final response before AG2 returns it to the application.
+- the final plain-text response before AG2 returns it to the application.
+
+The model-input path remains framework-owned. The adapter does not claim to
+authorize or rewrite input before AG2 sends it to the model.
 
 `confirm_order` is explicitly marked as a mutating API action. If a policy
 requires approval, the adapter waits for the TrustLoopGuard decision and only

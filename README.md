@@ -7,8 +7,8 @@ frameworks without rewriting their business logic.
 
 | Framework | Protected boundaries | Integration | Example |
 | --- | --- | --- | --- |
-| AG2 | Model input, tool calls, model output | Async middleware | [Guard an AG2 sales agent](examples/ag2/README.md) |
-| Agno | Tool calls, model output | Sync hooks | [Guard an Agno sales agent](examples/agno/README.md) |
+| AG2 | Tool calls, final plain-text output | Async middleware | [Guard an AG2 sales agent](examples/ag2/README.md) |
+| Agno | Tool calls, final plain-text output | Sync hooks | [Guard an Agno sales agent](examples/agno/README.md) |
 
 Both examples use the same flow:
 
@@ -19,8 +19,8 @@ Both examples use the same flow:
 
 For both frameworks, a tool only runs when the guard decision permits it.
 Denied, deferred, or approval-pending calls are returned to the agent as normal
-tool results so the framework loop can continue safely. AG2 middleware also
-guards model input; Agno's current public input path remains framework-owned.
+tool results so the framework loop can continue safely. The model-input path
+remains framework-owned for both adapters.
 
 ## Prerequisites
 
@@ -28,13 +28,16 @@ guards model input; Agno's current public input path remains framework-owned.
 - A running TrustLoopGuard API and API key
 - An OpenAI API key for the demo agents
 
-The examples require a TrustLoopGuard Python SDK build containing the AG2 and
-Agno adapters. Until that SDK version is published, install it from a sibling
-TrustLoopGuard checkout:
+The examples require the TrustLoopGuard Python SDK changes in
+[TrustLoopGuard PR #431](https://github.com/ducnguyen67201/TrustLoopGuard/pull/431).
+Until a package containing those adapters is published, install the SDK from a
+sibling TrustLoopGuard checkout:
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
+git clone https://github.com/ducnguyen67201/TrustLoopGuard.git ../TrustLoopGuard
+git -C ../TrustLoopGuard switch codex/python-agent-framework-integrations
 python -m pip install -e "../TrustLoopGuard/sdks/python[ag2,agno]"
 python -m pip install "ag2[openai]>=1.0.0b0,<1.1" "agno[openai]>=2.8.3,<3"
 ```
