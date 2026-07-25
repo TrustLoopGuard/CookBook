@@ -1,0 +1,2 @@
+trustloopguard[agno]
+agno[openai]>=2.8.3,<3
