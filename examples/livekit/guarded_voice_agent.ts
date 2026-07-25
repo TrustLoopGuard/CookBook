@@ -35,7 +35,7 @@ export function createGuardedVoiceAgent(
     failClosed: true,
     run: liveKitRun(session, {
       externalId: roomSid,
-      metadata: { integration: 'livekit' },
+      metadata: { framework: 'livekit' },
     }),
     tools: {
       inferMetadata: () => ({ side_effect: 'api_mutation' }),
