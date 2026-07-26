@@ -19,6 +19,7 @@ def lookup_inventory(sku: str) -> str:
 
 def confirm_order(order_id: str, sku: str, quantity: int) -> str:
     """Simulate confirming an order in an external order API."""
+    print("Executing confirm_order after TrustLoopGuard authorization.")
     return f"Order {order_id} confirmed for {quantity} x {sku}"
 
 
@@ -46,6 +47,7 @@ def build_agent(trustloop: Client) -> Agent:
             "lookup_inventory": SideEffectClass.read,
             "confirm_order": SideEffectClass.api_mutation,
         },
+        approval_timeout_s=300,
         context={"application": "trustloopguard-cookbook"},
     )
 

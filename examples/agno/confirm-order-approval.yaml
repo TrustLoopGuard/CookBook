@@ -1,0 +1,10 @@
+family: approval
+id: confirm-order-needs-approval
+description: Order confirmations require human sign-off before execution.
+severity: critical
+when:
+  tools: [confirm_order]
+  side_effects: [api_mutation]
+approver_roles: [owner, admin]
+reason: "Order confirmation changes external business state."
+action: require_approval
