@@ -17,21 +17,6 @@ importers:
       '@openai/agents':
         specifier: ^0.13.5
         version: 0.13.5(ws@8.21.1)(zod@4.4.3)
-      '@opentelemetry/api':
-        specifier: ^1.9.1
-        version: 1.9.1
-      '@opentelemetry/exporter-trace-otlp-proto':
-        specifier: ^0.221.0
-        version: 0.221.0(@opentelemetry/api@1.9.1)
-      '@opentelemetry/resources':
-        specifier: ^2.10.0
-        version: 2.10.0(@opentelemetry/api@1.9.1)
-      '@opentelemetry/sdk-trace-base':
-        specifier: ^2.10.0
-        version: 2.10.0(@opentelemetry/api@1.9.1)
-      '@opentelemetry/sdk-trace-node':
-        specifier: ^2.10.0
-        version: 2.10.0(@opentelemetry/api@1.9.1)
       '@trustloopguard/sdk':
         specifier: file:../TrustLoopGuard/sdks/typescript
         version: '@featherlane-ai/sdk@file:../TrustLoopGuard/sdks/typescript'
@@ -2609,7 +2594,13 @@ snapshots:
   '@esbuild/win32-x64@0.28.2':
     optional: true
 
-  '@featherlane-ai/sdk@file:../TrustLoopGuard/sdks/typescript': {}
+  '@featherlane-ai/sdk@file:../TrustLoopGuard/sdks/typescript':
+    dependencies:
+      '@opentelemetry/api': 1.9.1
+      '@opentelemetry/exporter-trace-otlp-proto': 0.221.0(@opentelemetry/api@1.9.1)
+      '@opentelemetry/resources': 2.10.0(@opentelemetry/api@1.9.1)
+      '@opentelemetry/sdk-trace-base': 2.10.0(@opentelemetry/api@1.9.1)
+      '@opentelemetry/sdk-trace-node': 2.10.0(@opentelemetry/api@1.9.1)
 
   '@hono/node-server@1.19.15(hono@4.12.32)':
     dependencies:
