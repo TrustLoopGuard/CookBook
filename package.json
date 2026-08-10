@@ -7,6 +7,7 @@
     "node": ">=24"
   },
   "scripts": {
+    "example:agent-run-evaluations": "tsx examples/agent-run-evaluations/agent-run.ts",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
@@ -20,6 +21,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
+    "tsx": "^4.23.11",
     "typescript": "^5.9.3",
     "vitest": "^4.1.4"
   }
