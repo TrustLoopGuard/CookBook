@@ -1,29 +1,56 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createWorkspaceFetch } from '../examples/agent-run-evaluations/agent-run.js';
+const sdk = vi.hoisted(() => {
+  const guardToolCall = vi.fn(async () => ({
+    effect: 'permit',
+    reason: 'Policy permits the read-only lookup',
+  }));
+  const event = vi.fn(async () => undefined);
+  const withEvent = vi.fn(async (_request, operation: () => Promise<object>) => operation());
+  const run = vi.fn(async (_options, operation) => ({
+    runId: '018f1111-1111-7111-8111-111111111111',
+    value: await operation({
+      id: '018f1111-1111-7111-8111-111111111111',
+      client: { guardToolCall },
+      event,
+      withEvent,
+    }),
+  }));
+  const shutdown = vi.fn(async () => undefined);
+  const init = vi.fn(() => ({ client: { guardToolCall }, run, shutdown }));
+  return { event, guardToolCall, init, run, shutdown, withEvent };
+});
+
+vi.mock('@trustloopguard/sdk/observability', () => ({
+  observability: { init: sdk.init },
+}));
+
+import { runObservedAgent } from '../examples/agent-run-evaluations/agent-run.js';
 
 describe('agent Run evaluation example', () => {
-  it('adds trusted workspace context to local example requests', async () => {
-    const transport = vi.fn<typeof fetch>(async () =>
-      Response.json({ ok: true }),
-    );
-    const request = createWorkspaceFetch(
-      {
-        apiUrl: 'http://localhost:8080',
-        apiKey: 'local-key',
-        adminUserId: 'admin-user-1',
-        workspaceId: 'workspace-1',
-        environmentId: 'production',
-      },
-      transport,
-    );
+  beforeEach(() => vi.clearAllMocks());
 
-    await request('http://localhost:8080/v1/runs', { method: 'GET' });
+  it('shows the complete integration without exposing OpenTelemetry plumbing', async () => {
+    const result = await runObservedAgent('cookbook-session-42');
 
-    const headers = new Headers(transport.mock.calls[0]?.[1]?.headers);
-    expect(headers.get('authorization')).toBe('Bearer local-key');
-    expect(headers.get('x-featherlane-ai-user-id')).toBe('admin-user-1');
-    expect(headers.get('x-featherlane-ai-workspace-id')).toBe('workspace-1');
-    expect(headers.get('x-featherlane-ai-environment-id')).toBe('production');
+    expect(sdk.init).toHaveBeenCalledWith({ agentId: 'cookbook-observed-agent' });
+    expect(sdk.run).toHaveBeenCalledWith(
+      { externalId: 'cookbook-session-42', kind: 'chat_session' },
+      expect.any(Function),
+    );
+    expect(sdk.event).toHaveBeenCalledTimes(2);
+    expect(sdk.withEvent).toHaveBeenCalledOnce();
+    expect(sdk.guardToolCall).toHaveBeenCalledWith({
+      agentId: 'cookbook-observed-agent',
+      operation: 'lookup_order',
+      parameters: { order_id: '42' },
+      sideEffect: 'read',
+    });
+    expect(sdk.shutdown).toHaveBeenCalledOnce();
+    expect(result).toEqual({
+      runId: '018f1111-1111-7111-8111-111111111111',
+      dashboardUrl:
+        'http://127.0.0.1:3000/runs/018f1111-1111-7111-8111-111111111111',
+    });
   });
 });
