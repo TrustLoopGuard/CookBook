@@ -13,6 +13,13 @@ frameworks without rewriting their business logic.
 | Mastra | Resolved local tools, final output | Agent decorator + output guard | [Guard a Mastra sales agent](examples/mastra/README.md) |
 | LiveKit Agents | Local function tools, pre-TTS text | Voice agent decorator | [Guard a LiveKit voice agent](examples/livekit/README.md) |
 
+## Observability and post-run evaluation
+
+The [agent Run + OpenTelemetry + post-run evaluation example](examples/agent-run-evaluations/README.md)
+is framework-independent. It registers an agent, assigns an evaluation policy,
+captures one complete Run with OTLP spans and a guarded tool decision, finalizes
+the Run, and waits for the immutable evaluation result.
+
 Every example uses the same flow:
 
 1. Build the framework agent and its tools normally.

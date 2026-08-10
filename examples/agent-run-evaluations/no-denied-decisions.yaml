@@ -1,0 +1,11 @@
+family: evaluation
+id: agent-run-no-denied-decisions
+description: A completed agent Run must not contain a denied runtime decision.
+severity: critical
+scope: runtime_decisions
+grader:
+  kind: run_metric
+  metric: denied_decisions
+  comparator: lte
+  value: 0
+on_missing_evidence: fail
