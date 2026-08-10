@@ -23,7 +23,8 @@ for evaluation results.
 2. Register the agent ID `cookbook-observed-agent`.
 3. Import [`no-denied-decisions.yaml`](no-denied-decisions.yaml) and assign it
    to that agent under its evaluation settings.
-4. Create a runtime API key for the same workspace and environment.
+4. Create a runtime API key for the same workspace and environment. Leave its
+   principal unbound, or bind it to `cookbook-observed-agent`.
 
 Policies and evaluation profiles belong to the control plane. They should not
 be recreated by every running agent process.
